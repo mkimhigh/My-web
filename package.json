@@ -1,0 +1,19 @@
+{
+  "name": "my-web-01",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "deploy": "npm run build && firebase deploy --only hosting,firestore:rules"
+  },
+  "dependencies": {
+    "firebase": "latest",
+    "lucide": "^1.24.0"
+  },
+  "devDependencies": {
+    "vite": "latest"
+  }
+}
