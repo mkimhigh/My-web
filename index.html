@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="강아지, 고양이, 여우 사진을 만나고 방명록을 남기는 포근한 동물 아지트"
+    />
+    <meta name="theme-color" content="#f7f1e6" />
+    <title>포근한 동물 아지트 | MY Web</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="포근한 동물 아지트 홈">
+          <span class="brand-mark" id="brand-icon" aria-hidden="true"></span>
+          <span>
+            <strong>동물 아지트</strong>
+            <small>오늘의 포근한 친구</small>
+          </span>
+        </a>
+        <div class="topbar-actions">
+          <p id="firebase-status" class="connection-status">연결 중</p>
+          <button class="admin-login" id="admin-login" type="button">
+            <span id="login-icon" aria-hidden="true"></span>
+            <span>관리자 로그인</span>
+          </button>
+          <div class="admin-session" id="admin-session" hidden>
+            <span class="admin-badge">관리자</span>
+            <button id="admin-logout" type="button">
+              <span id="logout-icon" aria-hidden="true"></span>
+              <span>로그아웃</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <p class="admin-auth-status" id="admin-auth-status" role="status" aria-live="polite"></p>
+
+      <main class="viewer">
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <p class="hero-kicker">
+              <span aria-hidden="true"></span>
+              PAWS &amp; PAUSE
+            </p>
+            <h1 id="hero-title">귀여움이 필요한 순간,<br /><em>한 장이면 충분해요.</em></h1>
+            <p class="hero-description">
+              강아지, 고양이, 여우 중 오늘 마음에 들어올 친구를 만나보세요.
+              마음이 조금 말랑해졌다면 방명록에 발자국도 남겨주세요.
+            </p>
+
+            <div class="animal-filter" role="group" aria-label="동물 종류">
+              <button type="button" data-animal="random" aria-pressed="true">랜덤</button>
+              <button type="button" data-animal="dog" aria-pressed="false">강아지</button>
+              <button type="button" data-animal="cat" aria-pressed="false">고양이</button>
+              <button type="button" data-animal="fox" aria-pressed="false">여우</button>
+            </div>
+
+            <div class="hero-tip">
+              <span class="hero-tip-icon" id="heart-icon" aria-hidden="true"></span>
+              <span><strong>잠깐의 쉼표</strong> 같은 사진을 매번 새롭게 골라드려요.</span>
+            </div>
+          </div>
+
+          <div class="photo-card">
+            <section
+              class="photo-stage is-loading"
+              id="photo-stage"
+              aria-live="polite"
+              aria-busy="true"
+              aria-label="오늘의 동물 사진"
+            >
+              <div class="photo-placeholder" aria-hidden="true">
+                <span class="placeholder-paw" id="placeholder-icon"></span>
+              </div>
+              <img id="animal-photo" alt="" referrerpolicy="no-referrer" />
+
+              <div class="photo-caption">
+                <span id="animal-label">랜덤</span>
+                <h2 id="photo-title">오늘 만난 동물</h2>
+              </div>
+
+              <div class="error-message" id="error-message" hidden>
+                <p>사진을 불러오지 못했어요.</p>
+                <button class="secondary-button" id="retry-photo" type="button">
+                  다시 시도
+                </button>
+              </div>
+            </section>
+
+            <div class="photo-actions">
+              <p>사진 출처 <a id="source-link" href="#" target="_blank" rel="noreferrer">공개 동물 사진 API</a></p>
+              <button class="primary-button" id="next-photo" type="button">
+                <span id="shuffle-icon" aria-hidden="true"></span>
+                새로운 친구 만나기
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <p class="sr-only" id="photo-status" role="status"></p>
+
+        <section class="guestbook" aria-labelledby="guestbook-title">
+          <div class="guestbook-heading">
+            <div>
+              <p class="section-eyebrow">PAW PRINTS</p>
+              <h2 id="guestbook-title">우리의 포근한 방명록</h2>
+              <p>오늘 만난 친구에게 따뜻한 한마디를 건네주세요.</p>
+            </div>
+            <span class="guestbook-count" id="guestbook-count" aria-live="polite">0개의 메시지</span>
+          </div>
+
+          <div class="guestbook-layout">
+            <form class="guestbook-form" id="guestbook-form" novalidate>
+              <div class="form-intro">
+                <span id="form-paw-icon" aria-hidden="true"></span>
+                <div>
+                  <strong>발자국 남기기</strong>
+                  <p>이름, 최애 동물, 메시지만 적으면 끝이에요.</p>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label for="guest-name">이름 <span aria-hidden="true">*</span></label>
+                <input
+                  id="guest-name"
+                  name="name"
+                  type="text"
+                  maxlength="20"
+                  autocomplete="name"
+                  placeholder="어떻게 불러드릴까요?"
+                  aria-describedby="name-error"
+                  required
+                />
+                <p class="field-error" id="name-error" aria-live="polite"></p>
+              </div>
+
+              <div class="form-field">
+                <label for="favorite-animal">최애 동물 <span aria-hidden="true">*</span></label>
+                <select
+                  id="favorite-animal"
+                  name="favoriteAnimal"
+                  aria-describedby="favorite-animal-error"
+                  required
+                >
+                  <option value="">가장 좋아하는 동물을 골라주세요</option>
+                  <option value="dog">강아지</option>
+                  <option value="cat">고양이</option>
+                  <option value="fox">여우</option>
+                </select>
+                <p class="field-error" id="favorite-animal-error" aria-live="polite"></p>
+              </div>
+
+              <div class="form-field">
+                <div class="field-label-row">
+                  <label for="guest-message">메시지 <span aria-hidden="true">*</span></label>
+                  <span id="message-count">0 / 300</span>
+                </div>
+                <textarea
+                  id="guest-message"
+                  name="message"
+                  rows="5"
+                  maxlength="300"
+                  placeholder="따뜻한 한마디를 남겨주세요."
+                  aria-describedby="message-error message-count"
+                  required
+                ></textarea>
+                <p class="field-error" id="message-error" aria-live="polite"></p>
+              </div>
+
+              <button class="guestbook-submit" id="guestbook-submit" type="submit">
+                <span id="send-icon" aria-hidden="true"></span>
+                <span id="submit-label">방명록 남기기</span>
+              </button>
+              <p class="form-status" id="guestbook-form-status" role="status" aria-live="polite"></p>
+            </form>
+
+            <div class="guestbook-feed">
+              <div class="guestbook-loading" id="guestbook-loading" aria-label="방명록을 불러오는 중" role="status">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="guestbook-empty" id="guestbook-empty" hidden>
+                <span id="message-circle-icon" aria-hidden="true"></span>
+                <strong>아직 남겨진 메시지가 없어요.</strong>
+                <p>첫 번째 발자국의 주인공이 되어주세요.</p>
+              </div>
+              <div class="guestbook-error" id="guestbook-error" role="alert" hidden>
+                <strong>방명록을 불러오지 못했어요.</strong>
+                <p id="guestbook-error-detail">잠시 후 새로고침해 주세요.</p>
+              </div>
+              <ol class="guestbook-list" id="guestbook-list" aria-label="방명록 메시지"></ol>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p><span aria-hidden="true">©</span> 2026 동물 아지트</p>
+        <p>오늘도 동물처럼 느긋하게.</p>
+      </footer>
+    </div>
+
+    <dialog class="delete-dialog" id="delete-dialog" aria-labelledby="delete-dialog-title">
+      <div class="delete-dialog-icon" id="delete-dialog-icon" aria-hidden="true"></div>
+      <h2 id="delete-dialog-title">방명록을 삭제할까요?</h2>
+      <p id="delete-dialog-description">삭제한 메시지는 다시 복구할 수 없습니다.</p>
+      <div class="delete-dialog-actions">
+        <button class="dialog-cancel" id="delete-cancel" type="button">취소</button>
+        <button class="dialog-confirm" id="delete-confirm" type="button">삭제하기</button>
+      </div>
+    </dialog>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
